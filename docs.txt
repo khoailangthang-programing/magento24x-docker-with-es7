@@ -1,0 +1,38 @@
+
+# Provider permission folder
+find var generated vendor pub/static pub/media app/etc -type f -exec chmod g+w {} + \
+    && find var generated vendor pub/static pub/media app/etc -type d -exec chmod g+ws {} + \
+    && chown -R :www-data $(ls -Idev/docker)
+
+# Full command setup with elasticsearch search (M2.4.x)
+php bin/magento setup:install \
+    --base-url=http://testapp.loc \
+    --db-host=mysql \
+    --db-name=magento_db \
+    --db-user=magento \
+    --db-password=secret \
+    --backend-frontname=admin_mn \
+    --admin-firstname=admin \
+    --admin-lastname=admin \
+    --admin-email=admin@example.com \
+    --admin-user=admin \
+    --admin-password=admin123 \
+    --language=en_US \
+    --currency=USD \
+    --timezone=America/Chicago \
+    --use-rewrites=1 \
+    --search-engine=elasticsearch7 \
+    --elasticsearch-host=elasticsearch \
+    --elasticsearch-port=9200
+
+# Run docker with magento user
+docker-compose exec -u magento php bash
+
+# Fix: General error: 1419 You do not have the SUPER privilege and binary logging is enabled (you *might* want to use the less safe log_bin_trust_function_creators variable)
+set global log_bin_trust_function_creators=1;
+
+# If do not have sample data, lets generate data with profiles
+php bin/magento setup:performance:generate-fixtures ./setup/performance-toolkit/profiles/ce/medium.xml
+
+# Run docker image
+docker exec -it <my_image_name> bash
