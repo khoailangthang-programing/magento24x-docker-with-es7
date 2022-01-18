@@ -36,3 +36,4 @@ php bin/magento setup:performance:generate-fixtures ./setup/performance-toolkit/
 
 # Run docker image
 docker exec -it <my_image_name> bash
+eg: access to mysql: sudo docker exec -it mysql bash
