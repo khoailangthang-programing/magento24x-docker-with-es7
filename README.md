@@ -13,3 +13,6 @@
 ** docker-compose exec -u magento php bash ** > access to docker container and do something you need, eg: run setup, deploy...
 3. Command
 Check the file command.txt
+4. Change hosts file content
+- Add 127.0.0.1 testapp.loc to end of hosts file
+5. Go to site http://testapp.loc/. Ensure that you has ran install command to install new site before
